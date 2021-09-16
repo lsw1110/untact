@@ -1,7 +1,9 @@
 package com.sbs.untact.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,14 +16,18 @@ import com.sbs.untact.dto.Article;
 
 @Controller
 public class UsrArticleController {
+	private int articlesLaseId;
 	private List<Article> articles;
 	
 	public UsrArticleController() {
+		// 멤버변수 초기화
+		articlesLaseId = 0;
 		articles = new ArrayList<>();
 		
-		articles.add(new Article(1, "2021-09-16 16:32", "제목1", "내용1"));
-		articles.add(new Article(2, "2021-09-16 16:32", "제목2", "내용2"));
-		articles.add(new Article(3, "2021-09-16 16:32", "제목3", "내용3"));
+		// 게시물 3개 생성
+		articles.add(new Article(++articlesLaseId, "2021-09-16 16:32", "제목1", "내용1"));
+		articles.add(new Article(++articlesLaseId, "2021-09-16 16:33", "제목2", "내용2"));
+		articles.add(new Article(++articlesLaseId, "2021-09-16 16:34", "제목3", "내용3"));
 		
 	}
 	
@@ -37,6 +43,19 @@ public class UsrArticleController {
 	@ResponseBody
 	public List<Article> showList() {
 		return articles;
+	}
+	
+	@RequestMapping("/usr/article/doAdd")
+	@ResponseBody
+	public Map<String, Object> doAdd(String regDate, String title, String body) {
+		articles.add(new Article(++articlesLaseId, regDate, title, body));
+		
+		Map<String, Object> rs = new HashMap<>();
+		rs.put("resultCode", "S-1");
+		rs.put("msg", "성공하였습니다.");
+		rs.put("id", articlesLaseId);
+		
+		return rs;
 	}
 }
 
