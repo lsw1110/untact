@@ -45,6 +45,8 @@ public class UsrArticleController {
 		return articles;
 	}
 	
+	//http://localhost:8021/usr/article/doAdd?regDate=2021-09-16 17:50:05&title=추가된 제목&body=추가된 내용
+	// 위 내용을 입력하면 게시물이 추가 된다.
 	@RequestMapping("/usr/article/doAdd")
 	@ResponseBody
 	public Map<String, Object> doAdd(String regDate, String title, String body) {
@@ -57,5 +59,39 @@ public class UsrArticleController {
 		
 		return rs;
 	}
+	
+	//http://localhost:8021/usr/article/doDelete?id=1
+	// 위 내용을 입력하면 1번 게시물이 삭제된다.
+	@RequestMapping("/usr/article/doDelete")
+	@ResponseBody
+	public Map<String, Object> doDelete(int id) {
+		boolean deleteArticleRs = deleteArticle(id);
+		
+		Map<String, Object> rs = new HashMap<>();
+		
+		if(deleteArticleRs) {
+			rs.put("resultCode", "S-1");
+			rs.put("msg", "성공하였습니다.");
+		}else {
+			rs.put("resultCode", "F-1");
+			rs.put("msg", "해당 게시물은 존재하지 않습니다.");
+		}
+		rs.put("id", id);
+		
+		return rs;
+	}
+
+	private boolean deleteArticle(int id) {
+		for(Article article : articles) {
+			if(article.getId() == id) {
+				articles.remove(article);
+				return true;
+			}
+		}
+		
+		return false;
+		
+	}
+	
 }
 
